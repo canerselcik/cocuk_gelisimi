@@ -25,7 +25,7 @@ const questions = [
 ];
 
 // ===============================
-// 2) RİSK SEVİYELERİ TANIMI
+// 2) RİSK SEVİYELERİ
 // ===============================
 const riskLevels = [
   {
@@ -107,22 +107,20 @@ const riskLevels = [
   }
 ];
 
-// ===============================
-// 3) ARAYÜZ OLUŞTURMA
-// ===============================
+
+// ==================================================
+// 3) SAYFA YÜKLENDİĞİNDE ARAYÜZÜ OLUŞTUR
+// ==================================================
 document.addEventListener("DOMContentLoaded", () => {
+
   const questionsContainer = document.getElementById("questionsContainer");
   const surveyForm = document.getElementById("surveyForm");
   const errorMessage = document.getElementById("errorMessage");
   const resultSection = document.getElementById("resultSection");
   const totalScoreEl = document.getElementById("totalScore");
-  const maxScoreEl = document.getElementById("maxScore");
   const riskBadgeEl = document.getElementById("riskBadge");
   const riskDescriptionEl = document.getElementById("riskDescription");
   const riskAdviceListEl = document.getElementById("riskAdviceList");
-  const resetBtn = document.getElementById("resetBtn");
-
-  maxScoreEl.textContent = "/ 100";
 
   // Soruları ekle
   questions.forEach((qText, index) => {
@@ -130,36 +128,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const questionDiv = document.createElement("div");
     questionDiv.className = "question-item";
-    questionDiv.dataset.questionIndex = String(qIndex);
 
     const title = document.createElement("p");
     title.className = "question-title";
-    title.textContent = qIndex + ". " + qText;
+    title.textContent = `${qIndex}. ${qText}`;
 
     const optionsRow = document.createElement("div");
     optionsRow.className = "options-row";
 
-    // 1–5 arasında seçenek oluştur
-    for (let value = 1; value <= 5; value++) {
+    for (let v = 1; v <= 5; v++) {
       const label = document.createElement("label");
       label.className = "option-label";
 
       const input = document.createElement("input");
       input.type = "radio";
-      input.name = "q" + qIndex;
-      input.value = String(value);
+      input.name = `q${qIndex}`;
+      input.value = String(v);
 
-      const spanValue = document.createElement("span");
-      spanValue.className = "value";
-      spanValue.textContent = value;
+      const span = document.createElement("span");
+      span.className = "value";
+      span.textContent = v;
 
       label.appendChild(input);
-      label.appendChild(spanValue);
+      label.appendChild(span);
 
-      // Tıklandığında görsel seçim efekti
       label.addEventListener("click", () => {
-        const siblings = optionsRow.querySelectorAll(".option-label");
-        siblings.forEach((s) => s.classList.remove("selected"));
+        optionsRow.querySelectorAll(".option-label").forEach(s => s.classList.remove("selected"));
         label.classList.add("selected");
       });
 
@@ -171,85 +165,86 @@ document.addEventListener("DOMContentLoaded", () => {
     questionsContainer.appendChild(questionDiv);
   });
 
-  // ===============================
-  // 4) FORM GÖNDERME – HESAPLAMA
-  // ===============================
-  surveyForm.addEventListener("submit", (e) => {
+
+  // ================================================
+  // FORM GÖNDERME
+  // ================================================
+  surveyForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     errorMessage.hidden = true;
 
-    let totalScore = 0;
-    let answeredCount = 0;
+    // 1) Veli bilgilerinin kontrolü
+    const email = document.getElementById("email").value.trim();
+    const age = document.getElementById("childAge").value;
+    const gender = document.getElementById("childGender").value;
+    const parent = document.getElementById("parentType").value;
 
-    questions.forEach((_, index) => {
-      const qIndex = index + 1;
-      const selected = document.querySelector(
-        `input[name="q${qIndex}"]:checked`
-      );
-      if (selected) {
-        totalScore += Number(selected.value);
-        answeredCount++;
-      }
-    });
-
-    if (answeredCount !== questions.length) {
+    if (!email || !age || !gender || !parent) {
+      errorMessage.textContent = "Lütfen tüm veli ve çocuk bilgilerini doldurunuz.";
       errorMessage.hidden = false;
-      resultSection.hidden = true;
       return;
     }
 
-    // Risk aralığını bul
-    const risk = riskLevels.find(
-      (level) => totalScore >= level.min && totalScore <= level.max
-    );
+    // 2) Soruların kontrolü
+    let totalScore = 0, answered = 0;
+    const answers = {};
 
-    // Sonuç gösterimi
-    totalScoreEl.textContent = String(totalScore);
-
-    // Badge stillerini resetle
-    riskBadgeEl.className = "risk-badge";
-    if (risk) {
-      riskBadgeEl.classList.add(risk.cssClass);
-      riskBadgeEl.textContent = risk.badge;
-      riskDescriptionEl.textContent = risk.description;
-
-      // Tavsiye listesini doldur
-      riskAdviceListEl.innerHTML = "";
-      risk.advice.forEach((item) => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        riskAdviceListEl.appendChild(li);
-      });
-    } else {
-      riskBadgeEl.textContent = "Puan aralığı bulunamadı.";
-      riskDescriptionEl.textContent =
-        "Teknik bir sorun oluştu. Lütfen tekrar deneyiniz.";
-      riskAdviceListEl.innerHTML = "";
-    }
-
-    resultSection.hidden = false;
-
-    // Sonuca scroll
-    resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-
-  // ===============================
-  // 5) SIFIRLAMA BUTONU
-  // ===============================
-  resetBtn.addEventListener("click", () => {
-    // Tüm seçimleri temizle
-    const inputs = surveyForm.querySelectorAll('input[type="radio"]');
-    inputs.forEach((input) => {
-      input.checked = false;
+    questions.forEach((_, i) => {
+      const idx = i + 1;
+      const selected = document.querySelector(`input[name="q${idx}"]:checked`);
+      if (selected) {
+        totalScore += Number(selected.value);
+        answered++;
+        answers[`Soru_${idx}`] = Number(selected.value);
+      }
     });
 
-    const labels = surveyForm.querySelectorAll(".option-label");
-    labels.forEach((label) => label.classList.remove("selected"));
+    if (answered !== questions.length) {
+      errorMessage.textContent = "Lütfen tüm soruları cevaplayınız.";
+      errorMessage.hidden = false;
+      return;
+    }
 
-    errorMessage.hidden = true;
-    resultSection.hidden = true;
-    totalScoreEl.textContent = "0";
+    // 3) Risk seviyesini bul
+    const risk = riskLevels.find(r => totalScore >= r.min && totalScore <= r.max);
+
+    // 4) Sonucu ekranda göster
+    totalScoreEl.textContent = totalScore;
+    riskBadgeEl.className = "risk-badge " + risk.cssClass;
+    riskBadgeEl.textContent = risk.badge;
+    riskDescriptionEl.textContent = risk.description;
+
+    riskAdviceListEl.innerHTML = "";
+    risk.advice.forEach(a => {
+      const li = document.createElement("li");
+      li.textContent = a;
+      riskAdviceListEl.appendChild(li);
+    });
+
+    resultSection.hidden = false;
+    resultSection.scrollIntoView({ behavior: "smooth" });
+
+    // ===============================
+    // 5) FIREBASE KAYIT
+    // ===============================
+    try {
+      await window.addDoc(window.collection(window.db, "anket_sonuclari"), {
+        email,
+        childAge: age,
+        childGender: gender,
+        parentType: parent,
+        totalScore,
+        riskLevel: risk.badge,
+        answers,
+        tarih: new Date().toISOString()
+      });
+
+      console.log("🔥 Firebase'e kayıt başarılı!");
+
+    } catch (err) {
+      console.error("Firebase kayıt hatası:", err);
+      alert("Veriler kaydedilirken hata oluştu.");
+    }
   });
 
-  
 });

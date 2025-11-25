@@ -6,81 +6,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div class="page-wrapper">
-        <header class="header">
-            <h1>3–6 Yaş Çocuklarda Ekran Kullanımı Risk Anketi</h1>
-            <p class="subtitle">
-                Bu anket, çocukların ekran kullanım alışkanlıklarını ve buna bağlı davranışsal riskleri
-                değerlendirmek amacıyla hazırlanmıştır. Her soru için çocuğunuza en uygun seçeneği işaretleyiniz.
-            </p>
-        </header>
+<div class="page-wrapper">
 
-        <main class="main">
-            <section class="card">
-                <h2>Anket Soruları</h2>
-                <p class="info-text">
-                    Her ifade için çocuğunuzu düşünerek cevap veriniz:
-                    <strong>1 = Hiçbir zaman</strong> &nbsp;–&nbsp;
-                    <strong>5 = Her zaman</strong>
-                </p>
+    <!-- ================= HEADER ================= -->
+    <header class="header">
+        <h1>3–6 Yaş Çocuklarda Ekran Kullanımı Risk Anketi</h1>
+        <p class="subtitle">
+            Bu anket, çocukların ekran kullanım alışkanlıklarını ve buna bağlı davranışsal riskleri
+            değerlendirmek amacıyla hazırlanmıştır. Her soru için çocuğunuza en uygun seçeneği işaretleyiniz.
+        </p>
+    </header>
 
-                <form id="surveyForm">
-                    <div id="questionsContainer" class="questions-container">
-                        <!-- Sorular JS ile doldurulacak -->
-                    </div>
 
-                    <div class="scale-legend">
-                        <span><strong>1</strong> Hiçbir zaman</span>
-                        <span><strong>2</strong> Nadiren</span>
-                        <span><strong>3</strong> Bazen</span>
-                        <span><strong>4</strong> Çoğu zaman</span>
-                        <span><strong>5</strong> Her zaman</span>
-                    </div>
+    <!-- ================= VELİ & ÇOCUK BİLGİLERİ ================= -->
+    <section class="card">
+        <h2>Veli ve Çocuk Bilgileri</h2>
 
-                    <div class="form-footer">
-                        <p id="errorMessage" class="error-message" hidden>
-                            Lütfen tüm soruları cevaplayınız.
-                        </p>
-                        <button type="submit" class="btn-primary">
-                            Sonucu Göster
-                        </button>
-                        <button type="button" id="resetBtn" class="btn-secondary">
-                            Sıfırla
-                        </button>
-                    </div>
-                </form>
-            </section>
+        <div class="input-group">
+            <label for="email">E-posta</label>
+            <input type="email" id="email" placeholder="ornek@mail.com" required>
+        </div>
 
-            <section id="resultSection" class="card result-card" hidden>
-                <h2>Değerlendirme Sonucu</h2>
-                <p class="score-text">
-                    Toplam Puanınız:
-                    <span id="totalScore" class="score-value">0</span>
-                    <span id="maxScore" class="score-max">/ 100</span>
-                </p>
+        <div class="input-group">
+            <label for="childAge">Çocuğun Yaşı</label>
+            <select id="childAge" required>
+                <option value="">Seçiniz</option>
+                <option value="3">3 Yaş</option>
+                <option value="4">4 Yaş</option>
+                <option value="5">5 Yaş</option>
+                <option value="6">6 Yaş</option>
+            </select>
+        </div>
 
-                <div id="riskBadge" class="risk-badge">
-                    <!-- Örn: 🟢 Risksiz Bölge -->
+        <div class="input-group">
+            <label for="childGender">Çocuğun Cinsiyeti</label>
+            <select id="childGender" required>
+                <option value="">Seçiniz</option>
+                <option value="Kız">Kız</option>
+                <option value="Erkek">Erkek</option>
+                <option value="Belirtmek istemiyorum">Belirtmek istemiyorum</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="parentType">Ebeveyn</label>
+            <select id="parentType" required>
+                <option value="">Seçiniz</option>
+                <option value="Anne">Anne</option>
+                <option value="Baba">Baba</option>
+                <option value="Diğer">Diğer</option>
+            </select>
+        </div>
+    </section>
+
+
+    <!-- ================= ÖLÇEK AÇIKLAMASI ================= -->
+    <section class="card scale-card">
+        <div class="scale-top">
+            <strong>Ölçek Açıklaması:</strong><br>
+            1 = Hiçbir zaman • 2 = Nadiren • 3 = Bazen • 4 = Çoğu zaman • 5 = Her zaman
+        </div>
+    </section>
+
+
+    <!-- ================= ANKET SORULARI ================= -->
+    <main class="main">
+        <section class="card">
+            <h2>Anket Soruları</h2>
+
+            <form id="surveyForm">
+                <div id="questionsContainer" class="questions-container">
+                    <!-- Sorular JS ile yüklenecek -->
                 </div>
 
-                <div class="result-content">
-                    <h3>Açıklama</h3>
-                    <p id="riskDescription"></p>
-
-                    <h3>Tavsiye ve Öneriler</h3>
-                    <ul id="riskAdviceList" class="advice-list"></ul>
+                <div class="form-footer">
+                    <p id="errorMessage" class="error-message" hidden>
+                        Lütfen tüm soruları cevaplayınız.
+                    </p>
+                    <button type="submit" class="btn-primary">Sonucu Göster</button>
+                    <button type="button" id="resetBtn" class="btn-secondary">Sıfırla</button>
                 </div>
-            </section>
-        </main>
+            </form>
+        </section>
 
-        <footer class="footer">
-            <p>
-                Bu anket sonuçları bilgilendirme amaçlıdır ve profesyonel klinik değerlendirme yerine geçmez.
+
+        <!-- ================= SONUÇ BÖLÜMÜ ================= -->
+        <section id="resultSection" class="card result-card" hidden>
+            <h2>Değerlendirme Sonucu</h2>
+
+            <p class="score-text">
+                Toplam Puanınız:
+                <span id="totalScore" class="score-value">0</span>
+                <span id="maxScore" class="score-max">/ 100</span>
             </p>
-        </footer>
-    </div>
 
-    <script src="script.js"></script>
+            <div id="riskBadge" class="risk-badge"></div>
+
+            <div class="result-content">
+                <h3>Açıklama</h3>
+                <p id="riskDescription"></p>
+
+                <h3>Tavsiye ve Öneriler</h3>
+                <ul id="riskAdviceList" class="advice-list"></ul>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+        Bu anket sonuçları bilgilendirme amaçlıdır, klinik değerlendirme yerine geçmez.
+    </footer>
+
+</div>
+
+
+<!-- ================= FIREBASE ================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC2hMWRV75GwpbUgga_xtus0t2OF0AexoXU",
+    authDomain: "cocuk-51a02.firebaseapp.com",
+    projectId: "cocuk-51a02",
+    storageBucket: "cocuk-51a02.firebasestorage.app",
+    messagingSenderId: "959092304302",
+    appId: "1:959092304302:web:5763babbe5af04d72f9403f",
+    measurementId: "G-WK1F3CB3WR"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 🔥 Bunlar olmadan script.js erişemez!
+  window.db = db;
+  window.addDoc = addDoc;
+  window.collection = collection;
+
+  console.log("Firebase bağlantısı başarılı ✔");
+</script>
+
+<script src="script.js"></script>
+
 </body>
 </html>
