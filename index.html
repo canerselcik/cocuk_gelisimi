@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Çocuk Ekran Kullanım Risk Anketi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header class="header">
+            <h1>3–6 Yaş Çocuklarda Ekran Kullanımı Risk Anketi</h1>
+            <p class="subtitle">
+                Bu anket, çocukların ekran kullanım alışkanlıklarını ve buna bağlı davranışsal riskleri
+                değerlendirmek amacıyla hazırlanmıştır. Her soru için çocuğunuza en uygun seçeneği işaretleyiniz.
+            </p>
+        </header>
+
+        <main class="main">
+            <section class="card">
+                <h2>Anket Soruları</h2>
+                <p class="info-text">
+                    Her ifade için çocuğunuzu düşünerek cevap veriniz:
+                    <strong>1 = Hiçbir zaman</strong> &nbsp;–&nbsp;
+                    <strong>5 = Her zaman</strong>
+                </p>
+
+                <form id="surveyForm">
+                    <div id="questionsContainer" class="questions-container">
+                        <!-- Sorular JS ile doldurulacak -->
+                    </div>
+
+                    <div class="scale-legend">
+                        <span><strong>1</strong> Hiçbir zaman</span>
+                        <span><strong>2</strong> Nadiren</span>
+                        <span><strong>3</strong> Bazen</span>
+                        <span><strong>4</strong> Çoğu zaman</span>
+                        <span><strong>5</strong> Her zaman</span>
+                    </div>
+
+                    <div class="form-footer">
+                        <p id="errorMessage" class="error-message" hidden>
+                            Lütfen tüm soruları cevaplayınız.
+                        </p>
+                        <button type="submit" class="btn-primary">
+                            Sonucu Göster
+                        </button>
+                        <button type="button" id="resetBtn" class="btn-secondary">
+                            Sıfırla
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="resultSection" class="card result-card" hidden>
+                <h2>Değerlendirme Sonucu</h2>
+                <p class="score-text">
+                    Toplam Puanınız:
+                    <span id="totalScore" class="score-value">0</span>
+                    <span id="maxScore" class="score-max">/ 100</span>
+                </p>
+
+                <div id="riskBadge" class="risk-badge">
+                    <!-- Örn: 🟢 Risksiz Bölge -->
+                </div>
+
+                <div class="result-content">
+                    <h3>Açıklama</h3>
+                    <p id="riskDescription"></p>
+
+                    <h3>Tavsiye ve Öneriler</h3>
+                    <ul id="riskAdviceList" class="advice-list"></ul>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>
+                Bu anket sonuçları bilgilendirme amaçlıdır ve profesyonel klinik değerlendirme yerine geçmez.
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
